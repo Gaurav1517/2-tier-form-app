@@ -62,7 +62,72 @@ Lists all collections (tables) inside the database.
 ```bash
 db.mycollection.find().pretty();
 ```
-This fetches all documents in the `mycollection` collection and formats them for readability.
 
-Let me know if you need further guidance! 🚀
+## Dockerfile to containerize your Node.js application with MongoDB:
+
+```dockerfile
+# Use official Node.js image 
+FROM node:22-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy application files
+COPY . .
+
+# Expose the port the application runs on
+EXPOSE 3000
+
+# Set environment variables for MongoDB
+ENV MONGO_URL="mongodb://mongo:27017/mydatabase"
+
+# Start the application
+CMD ["node", "server.js"]
+```
+
+### **Docker Compose (optional)**
+If your app depends on MongoDB, consider using `docker-compose.yml` to manage services:
+
+```yaml
+version: "3"
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URL: "mongodb://mongo:27017/mydatabase"
+
+  mongo:
+    image: mongo:8.0
+    restart: always
+    ports:
+      - "27017:27017"
+```
+
+### **Steps to Build & Run**
+1️⃣ Build the image:
+```bash
+docker build -t my-node-app .
+```
+
+2️⃣ Run the container:
+```bash
+docker run -p 3000:3000 --name myapp my-node-app
+```
+
+OR use **Docker Compose**:
+```bash
+docker-compose up -d
+```
+
+This setup ensures your Node.js app connects to MongoDB inside a Docker network. Let me know if you need tweaks! 🚀
 
