@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/webform', {
+// Use environment variable, fallback to local for dev
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/webform';
+
+mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -31,4 +34,3 @@ app.post('/submit', async (req, res) => {
 });
 
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));
-
